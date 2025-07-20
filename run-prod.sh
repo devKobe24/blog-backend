@@ -1,0 +1,3 @@
+#!/bin/zsh
+echo "STARTING BLOG BACKEND IN PROD ENVIRONMENT..."
+SPRING_PROFILES_ACTIVE=prod ./gradlew bootRun
