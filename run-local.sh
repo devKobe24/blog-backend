@@ -1,0 +1,3 @@
+#!/bin/zsh
+echo "STARTING BLOG BACKEND IN LOCAL ENVIRONMENT..."
+SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
