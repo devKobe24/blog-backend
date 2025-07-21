@@ -14,8 +14,8 @@ public class PostResponse {
 	private Long id;
 	private String title;
 	private String content;
-	private int viewContent;
-	private int likeContent;
+	private int viewCount;
+	private int likeCount;
 	private UserResponse author;
 	private CategoryResponse category;
 	private List<TagResponse> tags;
