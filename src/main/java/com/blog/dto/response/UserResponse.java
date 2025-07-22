@@ -1,5 +1,6 @@
 package com.blog.dto.response;
 
+import com.blog.entity.User;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,4 +18,16 @@ public class UserResponse {
 	private String profileImage;
 	private String role;
 	private LocalDateTime createdAt;
+
+	public static UserResponse fromEntity(User user) {
+		return UserResponse.builder()
+			.id(user.getId())
+			.username(user.getUsername())
+			.email(user.getUsername())
+			.nickname(user.getNickname())
+			.profileImage(user.getProfileImage())
+			.role(user.getRole().name())
+			.createdAt(user.getCreatedAt())
+			.build();
+	}
 }
