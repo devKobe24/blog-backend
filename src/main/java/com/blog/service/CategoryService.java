@@ -85,6 +85,16 @@ public class CategoryService {
 			.collect(Collectors.toList());
 	}
 
+	public boolean existsById(Long categoryId) {
+		return categoryRepository.existsById(categoryId);
+	}
+
+	public int getPostCount(Long categoryId) {
+		Category category = categoryRepository.findById(categoryId)
+			.orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다."));
+		return category.getPosts() != null ? category.getPosts().size() : 0;
+	}
+
 	// DTO 변환 메서드
 	private CategoryResponse convertToResponse(Category category) {
 		return CategoryResponse.builder()
