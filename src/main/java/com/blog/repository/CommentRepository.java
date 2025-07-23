@@ -17,6 +17,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
 	List<Comment> findByParentIdAndIsDeletedFalseOrderByCreatedAtAsc(Long parentId);
 
+	Page<Comment> findByParentIdAndIsDeletedFalse(Long parentId, Pageable pageable);
+
 	@Query("SELECT c FROM Comment c WHERE c.author.id = :authorId AND c.isDeleted = false")
 	Page<Comment> findByAuthorId(@Param("authorId") Long authorId, Pageable pageable);
 
