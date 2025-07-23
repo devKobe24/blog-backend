@@ -86,6 +86,30 @@ public class TagService {
 			.map(this::convertToListResponse);
 	}
 
+	public boolean existsById(Long tagId) {
+		return tagRepository.existsById(tagId);
+	}
+
+	public int getPostCount(Long tagId) {
+		Tag tag = tagRepository.findById(tagId)
+			.orElseThrow(() -> new IllegalArgumentException("태그를 찾을 수 없습니다."));
+		return tag.getPosts() != null ? tag.getPosts().size() : 0;
+	}
+
+	public List<TagListResponse> getPopularTags(int limit) {
+		Pageable pageable = PageRequest.of(0, limit);
+		return tagRepository.findPopularTags(pageable).stream()
+			.map(this::convertToListResponse)
+			.collect(Collectors.toList());
+	}
+
+	public List<TagResponse> getTagAutoComplete(String keyword, int limit) {
+		Pageable pageable = PageRequest.of(0, limit);
+		return tagRepository.searchTagsByName(keyword, pageable).getContent().stream()
+			.map(this::convertToResponse)
+			.collect(Collectors.toList());
+	}
+
 	// DTO 변환 메서드
 	private TagResponse convertToResponse(Tag tag) {
 		return TagResponse.builder()
