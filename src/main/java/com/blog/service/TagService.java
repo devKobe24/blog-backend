@@ -79,10 +79,9 @@ public class TagService {
 			.build();
 	}
 
-	public List<TagListResponse> searchTags(String keyword) {
-		return tagRepository.searchByName(keyword).stream()
-			.map(this::convertToListResponse)
-			.collect(Collectors.toList());
+	public Page<TagListResponse> searchTags(String keyword, Pageable pageable) {
+		return tagRepository.searchTagsByName(keyword, pageable)
+			.map(this::convertToListResponse);
 	}
 
 	// DTO 변환 메서드
