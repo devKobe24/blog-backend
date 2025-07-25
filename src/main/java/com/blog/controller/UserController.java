@@ -95,4 +95,48 @@ public class UserController {
 		userService.changePassword(request);
 		return ResponseEntity.ok().build();
 	}
+
+	@Operation(summary = "사용자 비활성화", description = "관리자가 사용자 계정을 비활성화합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "사용자 비활성화 성공",
+		content = @Content(schema = @Schema(implementation = UserResponse.class))),
+		@ApiResponse(responseCode = "401", description = "인증 필요"),
+		@ApiResponse(responseCode = "403", description = "권한 없음"),
+		@ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음")
+	})
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PutMapping("/users/{userId}/deactivate")
+	public ResponseEntity<UserResponse> deactivateUser(
+		@Parameter(description = "사용자 ID", required = true) @PathVariable Long userId,
+		Principal principal) {
+		return ResponseEntity.ok(userService.deactivateUser(userId));
+	}
+
+	@Operation(summary = "사용자 활성화", description = "관리자가 사용자 계정을 활성화합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "사용자 활성화 성공",
+		content = @Content(schema = @Schema(implementation = UserResponse.class))),
+		@ApiResponse(responseCode = "401", description = "인증 필요"),
+		@ApiResponse(responseCode = "403", description = "권한 없음"),
+		@ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음")
+	})
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PutMapping("/users/{userId}/activate")
+	public ResponseEntity<UserResponse> activateUser(
+		@Parameter(description = "사용자 ID", required = true) @PathVariable Long userId,
+		Principal principal) {
+		return ResponseEntity.ok(userService.activateUser(userId));
+	}
+
+	@Operation(summary = "관리자 권한 확인", description = "현재 사용자가 관리자인지 확인합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "권한 확인 성공"),
+		@ApiResponse(responseCode = "401", description = "인증 필요")
+	})
+	@SecurityRequirement(name = "Bearer Authentication")
+	@GetMapping("/admin/check")
+	public ResponseEntity<Boolean> checkAdminRole(Principal principal) {
+		boolean isAdmin = userService.isUserAdmin(principal.getName());
+		return ResponseEntity.ok(isAdmin);
+	}
 }
