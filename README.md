@@ -202,7 +202,7 @@ docker run -p 8080:8080 blog-backend
 ## 👨‍💻 개발자
 
 - **개발자**: Minseong Kang
-- **이메일**: devkobe24@gmail.com
+- **이메일**: dev.skyachieve91@gmail.com
 - **GitHub**: https://github.com/devKobe24
 
 ## 🤝 기여하기
