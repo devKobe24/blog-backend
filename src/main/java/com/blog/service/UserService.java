@@ -119,6 +119,28 @@ public class UserService {
 		userRepository.save(user);
 	}
 
+	@Transactional
+	public UserResponse deactivateUser(Long userId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new IllegalArgumentException("시용자를 찾을 수 없습니다."));
+
+		// 엔티티의 비즈니스 메서드 사용
+		user.deactivate();
+		User deactivatedUser = userRepository.save(user);
+		return convertToUserResponse(deactivatedUser);
+	}
+
+	@Transactional
+	public UserResponse activateUser(Long userId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+		// 엔티티의 비즈니스 메서드 사용
+		user.activate();
+		User activatedUser = userRepository.save(user);
+		return convertToUserResponse(activatedUser);
+	}
+
 	public List<UserResponse> getAllUsers() {
 		return userRepository.findAllActiveUsers().stream()
 			.map(this::convertToUserResponse)
