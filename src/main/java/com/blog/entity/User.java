@@ -97,4 +97,30 @@ public class User implements UserDetails {
 	public enum Role {
 		USER, ADMIN
 	}
+
+	// 비즈니스 메서드들
+	public void updateProfile(String nickname, String profileImage) {
+		this.nickname = nickname;
+		this.profileImage = profileImage;
+		// @PreUpdate가 자동으로 updatedAt을 설정합니다.
+	}
+
+	public void changePassword(String newPassword) {
+		this.password = newPassword;
+		// @PreUpdate가 자동으로 updatedAt을 설정합니다.
+	}
+
+	public void deactivate() {
+		this.isActive = false;
+		// @PreUpdate가 자동으로 updatedAt을 설정합니다.
+	}
+
+	public void activate() {
+		this.isActive = true;
+		// @PreUpdate가 자동으로 updatedAt을 설정합니다.
+	}
+
+	public boolean isAdmin() {
+		return this.role == Role.ADMIN;
+	}
 }
