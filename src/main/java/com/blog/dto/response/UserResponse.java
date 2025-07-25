@@ -17,6 +17,7 @@ public class UserResponse {
 	private String nickname;
 	private String profileImage;
 	private String role;
+	private boolean isActive;
 	private LocalDateTime createdAt;
 
 	public static UserResponse fromEntity(User user) {
@@ -27,6 +28,7 @@ public class UserResponse {
 			.nickname(user.getNickname())
 			.profileImage(user.getProfileImage())
 			.role(user.getRole().name())
+			.isActive(user.isActive())
 			.createdAt(user.getCreatedAt())
 			.build();
 	}
