@@ -6,6 +6,14 @@ import com.blog.dto.response.CategoryDetailResponse;
 import com.blog.dto.response.CategoryListResponse;
 import com.blog.dto.response.CategoryResponse;
 import com.blog.service.CategoryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +24,7 @@ import java.security.Principal;
 import java.util.List;
 
 @Slf4j
+@Tag(name = "Category", description = "카테고리 관련 API")
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
@@ -30,9 +39,18 @@ public class CategoryController {
 	 * @param principal 인증된 사용자 정보
 	 * @return 생성된 카테고리 정보
 	 */
+	@Operation(summary = "카테고리 생성", description = "새로운 카테고리를 생성합니다 (관리자 전용).")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "201", description = "카테고리 생성 성공",
+		content = @Content(schema = @Schema(implementation = CategoryResponse.class))),
+		@ApiResponse(responseCode = "400", description = "잘못된 요청"),
+		@ApiResponse(responseCode = "401", description = "인증 필요"),
+		@ApiResponse(responseCode = "403", description = "권한 없음")
+	})
+	@SecurityRequirement(name = "Bearer Authentication")
 	@PostMapping
 	public ResponseEntity<CategoryResponse> createCategory(
-		@RequestBody CategoryCreateRequest request,
+		@Parameter(description = "카테고리 생성 요청", required = true) @RequestBody CategoryCreateRequest request,
 		Principal principal) {
 
 		log.info("카테고리 생성 요청 - 이름: {}, 작성자: {}", request.getName(), principal.getName());
