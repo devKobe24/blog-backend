@@ -141,6 +141,14 @@ public class UserService {
 		return convertToUserResponse(activatedUser);
 	}
 
+	public boolean isUserAdmin(String username) {
+		User user = userRepository.findByUsername(username)
+			.orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+		// 엔티티의 비즈니스 메서드 사용
+		return user.isAdmin();
+	}
+
 	public List<UserResponse> getAllUsers() {
 		return userRepository.findAllActiveUsers().stream()
 			.map(this::convertToUserResponse)
