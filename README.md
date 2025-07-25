@@ -217,5 +217,5 @@ docker run -p 8080:8080 blog-backend
 
 프로젝트에 대한 문의사항이 있으시면 다음으로 연락해주세요:
 
-- **이메일**: devkobe24@gmail.com
+- **이메일**: dev.skyachieve91@gmail.com
 - **GitHub Issues**: [Issues 페이지](https://github.com/devKobe24/blog-backend/issues)
