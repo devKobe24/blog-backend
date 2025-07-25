@@ -6,6 +6,14 @@ import com.blog.dto.response.TagDetailResponse;
 import com.blog.dto.response.TagListResponse;
 import com.blog.dto.response.TagResponse;
 import com.blog.service.TagService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,6 +27,7 @@ import java.security.Principal;
 import java.util.List;
 
 @Slf4j
+@Tag(name = "Tag", description = "태그 관련 API")
 @RestController
 @RequestMapping("/api/tags")
 @RequiredArgsConstructor
@@ -33,9 +42,18 @@ public class TagController {
 	 * @param principal 인증된 사용자 정보
 	 * @return 생성된 태그 정보
 	 */
+	@Operation(summary = "태그 생성", description = "새로운 태그를 생성합니다 (관리자 전용).")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "201", description = "태그 생성 성공",
+		content = @Content(schema = @Schema(implementation = TagResponse.class))),
+		@ApiResponse(responseCode = "400", description = "잘못된 요청"),
+		@ApiResponse(responseCode = "401", description = "인증 필요"),
+		@ApiResponse(responseCode = "403", description = "권한 없음")
+	})
+	@SecurityRequirement(name = "Bearer Authentication")
 	@PostMapping
 	public ResponseEntity<TagResponse> createTag(
-		@RequestBody TagCreateRequest request,
+		@Parameter(description = "태그 생성 요청", required = true) @RequestBody TagCreateRequest request,
 		Principal principal) {
 
 		log.info("태그 생성 요청 - 이름: {}, 작성자: {}", request.getName(), principal.getName());
