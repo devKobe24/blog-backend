@@ -7,13 +7,21 @@ import com.blog.dto.request.UserUpdateRequest;
 import com.blog.dto.response.UserLoginResponse;
 import com.blog.dto.response.UserResponse;
 import com.blog.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
+@Tag(name = "User", description = "사용자 인증 관련 API")
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -21,33 +29,69 @@ public class UserController {
 
 	private final UserService userService;
 
-	// 회원가입
+	@Operation(summary = "회원가입", description = "새로운 사용자를 등록합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "회원가입 성공",
+			content = @Content(schema = @Schema(implementation = UserResponse.class))),
+		@ApiResponse(responseCode = "400", description = "잘못된 요청")
+	})
 	@PostMapping("/signup")
-	public ResponseEntity<UserResponse> signUp(@RequestBody UserSignUpRequest request) {
+	public ResponseEntity<UserResponse> signUp(
+		@Parameter(description = "회원가입 요청", required = true) @RequestBody UserSignUpRequest request) {
 		return ResponseEntity.ok(userService.signUp(request));
 	}
 
-	// 로그인
+	@Operation(summary = "로그인", description = "사용자 로그인을 수행합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "로그인 성공",
+			content = @Content(schema = @Schema(implementation = UserLoginResponse.class))),
+		@ApiResponse(responseCode = "400", description = "잘못된 요청"),
+		@ApiResponse(responseCode = "401", description = "인증 실패")
+	})
 	@PostMapping("/login")
-	public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
+	public ResponseEntity<UserLoginResponse> login(
+		@Parameter(description = "로그인 요청", required = true) @RequestBody UserLoginRequest request) {
 		return ResponseEntity.ok(userService.login(request));
 	}
 
-	// 내 정보 조회
+	@Operation(summary = "내 정보 조회", description = "현재 로그인한 사용자의 정보를 조회합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "사용자 정보 조회 성공",
+			content = @Content(schema = @Schema(implementation = UserResponse.class))),
+		@ApiResponse(responseCode = "401", description = "인증 필요")
+	})
+	@SecurityRequirement(name = "Bearer Authentication")
 	@GetMapping("/me")
 	public ResponseEntity<UserResponse> getCurrentUser(Principal principal) {
 		return ResponseEntity.ok(userService.getCurrentUser());
 	}
 
-	// 프로필 수정
+	@Operation(summary = "프로필 수정", description = "현재 사용자의 프로필을 수정합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "프로필 수정 성공",
+			content = @Content(schema = @Schema(implementation = UserResponse.class))),
+		@ApiResponse(responseCode = "400", description = "잘못된 요청"),
+		@ApiResponse(responseCode = "401", description = "인증 필요")
+	})
+	@SecurityRequirement(name = "Bearer Authentication")
 	@PutMapping("/profile")
-	public ResponseEntity<UserResponse> updateProfile(@RequestBody UserUpdateRequest request, Principal principal) {
+	public ResponseEntity<UserResponse> updateProfile(
+		@Parameter(description = "프로필 수정 요청", required = true) @RequestBody UserUpdateRequest request, 
+		Principal principal) {
 		return ResponseEntity.ok(userService.updateProfile(request));
 	}
 
-	// 비밀번호 변경
+	@Operation(summary = "비밀번호 변경", description = "현재 사용자의 비밀번호를 변경합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "비밀번호 변경 성공"),
+		@ApiResponse(responseCode = "400", description = "잘못된 요청"),
+		@ApiResponse(responseCode = "401", description = "인증 필요")
+	})
+	@SecurityRequirement(name = "Bearer Authentication")
 	@PutMapping("/password")
-	public ResponseEntity<Void> changePassword(@RequestBody UserChangePasswordRequest request, Principal principal) {
+	public ResponseEntity<Void> changePassword(
+		@Parameter(description = "비밀번호 변경 요청", required = true) @RequestBody UserChangePasswordRequest request, 
+		Principal principal) {
 		userService.changePassword(request);
 		return ResponseEntity.ok().build();
 	}
