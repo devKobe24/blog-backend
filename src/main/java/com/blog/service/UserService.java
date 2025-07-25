@@ -93,12 +93,11 @@ public class UserService {
 		User user = userRepository.findByUsername(username)
 			.orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-		if (request.getNickname() != null) {
-			user.setNickname(request.getNickname());
-		}
-		if (request.getProfileImage() != null) {
-			user.setProfileImage(request.getProfileImage());
-		}
+		// 엔티티의 비즈니스 메서드 사용
+		user.updateProfile(
+			request.getNickname() != null ? request.getNickname() : user.getNickname(),
+			request.getProfileImage() != null ? request.getProfileImage() : user.getProfileImage()
+		);
 
 		User updatedUser = userRepository.save(user);
 		return convertToUserResponse(updatedUser);
@@ -115,8 +114,8 @@ public class UserService {
 			throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
 		}
 
-		// 새 비밀번호 설정
-		user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+		// 엔티티의 비즈니스 메서드 사용
+		user.changePassword(passwordEncoder.encode(request.getNewPassword()));
 		userRepository.save(user);
 	}
 
