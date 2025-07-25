@@ -28,4 +28,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("SELECT u FROM User u WHERE u.username LIKE %:keyword% OR u.email LIKE %:keyword% OR u.nickname LIKE %:keyword%")
 	List<User> searchUsers(@Param("keyword") String keyword);
+
+	@Query("SELECT u FROM User u WHERE u.role = 'ADMIN'")
+	List<User> findAllAdmins();
+
+	@Query("SELECT u FROM User u WHERE u.isActive = false")
+	List<User> findAllInactiveUsers();
+
+	@Query("SELECT COUNT(u) FROM User u WHERE u.role = 'ADMIN'")
+	long countAdmins();
+
+	@Query("SELECT u FROM User u WHERE u.username = :username AND u.isActive = true")
+	Optional<User> findActiveUserByUsername(@Param("username") String username);
 }
