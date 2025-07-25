@@ -179,6 +179,7 @@ public class UserService {
 			.nickname(user.getNickname())
 			.profileImage(user.getProfileImage())
 			.role(user.getRole().name())
+			.isActive(user.isActive())
 			.createdAt(user.getCreatedAt())
 			.build();
 	}
