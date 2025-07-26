@@ -27,6 +27,7 @@ public class Category {
 	@Column
 	private String description;
 
+	@Builder.Default
 	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
 	private List<Post> posts = new ArrayList<>();
 
