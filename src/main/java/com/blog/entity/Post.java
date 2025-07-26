@@ -83,6 +83,47 @@ public class Post {
 		updatedAt = LocalDateTime.now();
 	}
 
+	// 비즈니스 메서드들
+	public void updateContent(String title, String content) {
+		this.title = title;
+		this.content = content;
+	}
+
+	public void publish() {
+		this.isPublished = true;
+	}
+
+	public void unpublish() {
+		this.isPublished = false;
+	}
+
+	public void addTag(Tag tag) {
+		if (this.tags == null) {
+			this.tags = new ArrayList<>();
+		}
+		this.tags.add(tag);
+	}
+
+	public void removeTag(Tag tag) {
+		if (this.tags != null) {
+			this.tags.remove(tag);
+		}
+	}
+
+	public void clearTags() {
+		if (this.tags != null) {
+			this.tags.clear();
+		}
+	}
+
+	public boolean isAuthor(User user) {
+		return this.author != null && this.author.equals(user);
+	}
+
+	public boolean isAuthor(String username) {
+		return this.author != null && this.author.getUsername().equals(username);
+	}
+
 	public void incrementViewCount() {
 		this.viewCount++;
 	}
