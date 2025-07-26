@@ -36,12 +36,15 @@ public class Comment {
 	@JoinColumn(name = "parent_id")
 	private Comment parent;
 
+	@Builder.Default
 	@OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Comment> replies = new ArrayList<>();
 
+	@Builder.Default
 	@Column(name = "like_count")
 	private int likeCount = 0;
 
+	@Builder.Default
 	@Column(name = "is_deleted")
 	private boolean isDeleted = false;
 
