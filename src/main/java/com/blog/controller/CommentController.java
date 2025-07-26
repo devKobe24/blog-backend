@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -49,7 +50,7 @@ public class CommentController {
 	@PostMapping("/posts/{postId}")
 	public ResponseEntity<CommentResponse> createComment(
 		@Parameter(description = "게시물 ID", required = true) @PathVariable Long postId,
-		@Parameter(description = "댓글 생성 요청", required = true) @RequestBody CommentCreateRequest request,
+		@Parameter(description = "댓글 생성 요청", required = true) @Valid @RequestBody CommentCreateRequest request,
 		Principal principal) {
 
 		log.info("댓글 생성 요청 - 게시글 ID: {}, 작성자: {}", postId, principal.getName());
@@ -84,7 +85,7 @@ public class CommentController {
 	@PutMapping("/{commentId}")
 	public ResponseEntity<CommentResponse> updateComment(
 		@Parameter(description = "댓글 ID", required = true) @PathVariable Long commentId,
-		@Parameter(description = "댓글 수정 요청", required = true) @RequestBody CommentUpdateRequest request,
+		@Parameter(description = "댓글 수정 요청", required = true) @Valid @RequestBody CommentUpdateRequest request,
 		Principal principal) {
 
 		log.info("댓글 수정 요청 - 댓글 ID: {}, 수정자: {}", commentId, principal.getName());
