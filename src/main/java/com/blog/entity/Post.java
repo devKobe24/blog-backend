@@ -42,6 +42,14 @@ public class Post {
 	@JoinColumn(name = "category_id")
 	private Category category;
 
+	@Builder.Default
+	@Column(name = "view_count")
+	private int viewCount = 0;
+
+	@Builder.Default
+	@Column(name = "like_count")
+	private int likeCount = 0;
+	@Builder.Default
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 		name = "post_tags",
@@ -50,9 +58,11 @@ public class Post {
 	)
 	private List<Tag> tags = new ArrayList<>();
 
+	@Builder.Default
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Comment> comments = new ArrayList<>();
 
+	@Builder.Default
 	@Column(name = "is_published")
 	private boolean isPublished = true;
 
