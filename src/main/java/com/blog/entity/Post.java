@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"author", "comments", "tags"})
+@ToString(exclude = {"comments"})
 public class Post {
 
 	@Id
