@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -50,7 +51,7 @@ public class CategoryController {
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PostMapping
 	public ResponseEntity<CategoryResponse> createCategory(
-		@Parameter(description = "카테고리 생성 요청", required = true) @RequestBody CategoryCreateRequest request,
+		@Parameter(description = "카테고리 생성 요청", required = true) @Valid @RequestBody CategoryCreateRequest request,
 		Principal principal) {
 
 		log.info("카테고리 생성 요청 - 이름: {}, 작성자: {}", request.getName(), principal.getName());
