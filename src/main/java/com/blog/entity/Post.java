@@ -28,12 +28,6 @@ public class Post {
 	@Column(columnDefinition = "TEXT", nullable = false)
 	private String content;
 
-	@Column(name = "view_count")
-	private int viewCount = 0;
-
-	@Column(name = "like_count")
-	private int likeCount = 0;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "author_id", nullable = false)
 	private User author;
@@ -49,6 +43,13 @@ public class Post {
 	@Builder.Default
 	@Column(name = "like_count")
 	private int likeCount = 0;
+
+	@Column(name = "created_at")
+	private LocalDateTime createdAt;
+
+	@Column(name = "updated_at")
+	private LocalDateTime updatedAt;
+
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
@@ -65,12 +66,6 @@ public class Post {
 	@Builder.Default
 	@Column(name = "is_published")
 	private boolean isPublished = true;
-
-	@Column(name = "created_at")
-	private LocalDateTime createdAt;
-
-	@Column(name = "updated_at")
-	private LocalDateTime updatedAt;
 
 	@PrePersist
 	protected void onCreate() {
