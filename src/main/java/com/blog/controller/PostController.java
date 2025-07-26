@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,7 @@ public class PostController {
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PostMapping
 	public ResponseEntity<PostResponse> createPost(
-		@Parameter(description = "게시물 생성 요청", required = true) @RequestBody PostCreateRequest request, 
+		@Parameter(description = "게시물 생성 요청", required = true) @Valid @RequestBody PostCreateRequest request,
 		Principal principal) {
 		String username = principal.getName();
 		PostResponse response = postService.createPost(request, username);
@@ -62,7 +63,7 @@ public class PostController {
 	@PutMapping("/{postId}")
 	public ResponseEntity<PostResponse> updatePost(
 		@Parameter(description = "게시물 ID", required = true) @PathVariable Long postId,
-		@Parameter(description = "게시물 수정 요청", required = true) @RequestBody PostUpdateRequest request,
+		@Parameter(description = "게시물 수정 요청", required = true) @Valid @RequestBody PostUpdateRequest request,
 		Principal principal) {
 		String username = principal.getName();
 		return ResponseEntity.ok(postService.updatePost(postId, request, username));
