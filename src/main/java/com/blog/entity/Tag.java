@@ -27,6 +27,7 @@ public class Tag {
 	@Column
 	private String description;
 
+	@Builder.Default
 	@ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
 	private List<Post> posts = new ArrayList<>();
 
