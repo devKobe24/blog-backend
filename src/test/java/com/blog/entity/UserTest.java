@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("User Entity Test")
@@ -17,7 +19,12 @@ class UserTest {
 			.email("test@example.com")
 			.password("encodedPassword")
 			.nickname("테스트 사용자")
+			.role(User.Role.USER)
+			.isActive(true)
 			.build();
+
+		// @PrePersist를 수동으로 호출하여 createdAt, updatedAt 설정
+		user.onCreate(); // 시간 설정
 	}
 
 	@Test
@@ -29,7 +36,12 @@ class UserTest {
 			.email("new@example.com")
 			.password("password123")
 			.nickname("새 사용자")
+			.role(User.Role.USER)
+			.isActive(true)
 			.build();
+
+		// @PrePersist를 수동으로 호출
+		newUser.onCreate();
 
 		// then
 		assertThat(newUser.getUsername()).isEqualTo("newUser");
@@ -60,13 +72,16 @@ class UserTest {
 	void changePassword() {
 		// given
 		String newPassword = "newEncodedPassword";
+		LocalDateTime beforeUpdate = user.getUpdatedAt();
 
 		// when
 		user.changePassword(newPassword);
+		// @PreUpdate를 수동으로 호출
+		user.onUpdate();
 
 		// then
 		assertThat(user.getPassword()).isEqualTo(newPassword);
-		assertThat(user.getUpdatedAt()).isAfter(user.getCreatedAt());
+		assertThat(user.getUpdatedAt()).isAfter(beforeUpdate);
 	}
 
 	@Test
@@ -77,18 +92,21 @@ class UserTest {
 			.id(1L)
 			.username("user1")
 			.email("user1@example.com")
+			.role(User.Role.USER)
 			.build();
 
 		User user2 = User.builder()
 			.id(1L)
 			.username("user2")
 			.email("user2@example.com")
+			.role(User.Role.USER)
 			.build();
 
 		User user3 = User.builder()
 			.id(2L)
-			.username("user3")
-			.email("user3@example.com")
+			.username("user1")
+			.email("user1@example.com")
+			.role(User.Role.USER)
 			.build();
 
 		// then
@@ -150,7 +168,6 @@ class UserTest {
 			.build();
 
 		// when & then
-		assertThat(user.isAdmin()).isFalse();
-
+		assertThat(adminUser.isAdmin()).isTrue();
 	}
 }
