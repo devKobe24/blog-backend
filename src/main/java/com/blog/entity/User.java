@@ -43,6 +43,7 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private Role role;
 
+	@Builder.Default
 	@Column(name = "is_active")
 	private boolean isActive = true;
 
