@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class UserController {
 	})
 	@PostMapping("/signup")
 	public ResponseEntity<UserResponse> signUp(
-		@Parameter(description = "회원가입 요청", required = true) @RequestBody UserSignUpRequest request) {
+		@Parameter(description = "회원가입 요청", required = true) @Valid @RequestBody UserSignUpRequest request) {
 		return ResponseEntity.ok(userService.signUp(request));
 	}
 
@@ -76,7 +77,7 @@ public class UserController {
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PutMapping("/profile")
 	public ResponseEntity<UserResponse> updateProfile(
-		@Parameter(description = "프로필 수정 요청", required = true) @RequestBody UserUpdateRequest request, 
+		@Parameter(description = "프로필 수정 요청", required = true) @Valid @RequestBody UserUpdateRequest request,
 		Principal principal) {
 		return ResponseEntity.ok(userService.updateProfile(request));
 	}
@@ -90,7 +91,7 @@ public class UserController {
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PutMapping("/password")
 	public ResponseEntity<Void> changePassword(
-		@Parameter(description = "비밀번호 변경 요청", required = true) @RequestBody UserChangePasswordRequest request, 
+		@Parameter(description = "비밀번호 변경 요청", required = true) @Valid @RequestBody UserChangePasswordRequest request,
 		Principal principal) {
 		userService.changePassword(request);
 		return ResponseEntity.ok().build();
