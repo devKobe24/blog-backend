@@ -6,6 +6,7 @@ import com.blog.dto.request.UserSignUpRequest;
 import com.blog.dto.request.UserUpdateRequest;
 import com.blog.dto.response.UserLoginResponse;
 import com.blog.dto.response.UserResponse;
+import com.blog.security.JwtTokenProvider;
 import com.blog.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,6 +30,7 @@ import java.security.Principal;
 public class UserController {
 
 	private final UserService userService;
+	private final JwtTokenProvider jwtTokenProvider;
 
 	@Operation(summary = "회원가입", description = "새로운 사용자를 등록합니다.")
 	@ApiResponses(value = {
@@ -139,5 +141,22 @@ public class UserController {
 	public ResponseEntity<Boolean> checkAdminRole(Principal principal) {
 		boolean isAdmin = userService.isUserAdmin(principal.getName());
 		return ResponseEntity.ok(isAdmin);
+	}
+
+	@Operation(summary = "로그아웃", description = "현재 사용자를 로그아웃하고 토큰을 무효화합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+		@ApiResponse(responseCode = "401", description = "인증 필요")
+	})
+	@SecurityRequirement(name = "Bearer Authentication")
+	@PostMapping("/logout")
+	public ResponseEntity<Void> logout(
+		@Parameter(description = "Authrization 헤더", required = true) @RequestHeader("Authorization") String authorizationHeader,
+		Principal principal) {
+		if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+			String token = authorizationHeader.substring(7);
+			jwtTokenProvider.invalidateToken(token);
+		}
+		return ResponseEntity.ok().build();
 	}
 }
