@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -23,6 +25,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final CorsConfigurationSource corsConfigurationSource;
+	private final SecurityHeadersConfig securityHeadersConfig;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -38,7 +42,21 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 			.csrf(AbstractHttpConfigurer::disable)
+			.cors(cors -> cors.configurationSource(corsConfigurationSource))
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+			.headers(headers -> headers
+				.contentTypeOptions(contentType -> {})
+				.frameOptions(frame -> frame.deny())
+				.referrerPolicy(referrer -> referrer.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+				.addHeaderWriter(securityHeadersConfig.xssProtectionWriter())
+				.addHeaderWriter(securityHeadersConfig.permissionsPolicyWriter())
+				.addHeaderWriter(securityHeadersConfig.contentSecurityPolicyWriter())
+				.addHeaderWriter(securityHeadersConfig.strictTransportSecurityWriter())
+				.addHeaderWriter(securityHeadersConfig.cacheControlWriter())
+				.addHeaderWriter(securityHeadersConfig.pragmaWriter())
+				.addHeaderWriter(securityHeadersConfig.expiresWriter())
+				.addHeaderWriter(securityHeadersConfig.apiVersionWriter())
+			)
 			.authorizeHttpRequests(authz -> authz
 				.requestMatchers("/api/auth/**").permitAll()
 				.requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
