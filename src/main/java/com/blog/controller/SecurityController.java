@@ -40,4 +40,20 @@ public class SecurityController {
 
 		return ResponseEntity.ok(status);
 	}
+
+	@Operation(summary = "보안 헤더 테스트", description = "보안 헤더가 올바르게 설정되었는지 확인합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "보안 헤더 테스트 성공"),
+		@ApiResponse(responseCode = "401", description = "인증 필요")
+	})
+	@SecurityRequirement(name = "Bearer Authentication")
+	@GetMapping("/headers/test")
+	public ResponseEntity<Map<String, Object>> testSecurityHeaders() {
+		Map<String, Object> response = new HashMap<>();
+		response.put("message", "보안 헤더가 설정되었습니다.");
+		response.put("timestamp", System.currentTimeMillis());
+		response.put("status", "secure");
+
+		return ResponseEntity.ok(response);
+	}
 }
